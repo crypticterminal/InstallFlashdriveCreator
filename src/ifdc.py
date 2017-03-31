@@ -20,8 +20,29 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #  
-#  
+#
 
+import platform, os, logging
+import subprocess,pexpect
+
+log = logging.log(__name__)
+
+def sudo_exec(cmdline,password):
+   osname = platform.system()
+   if osname == "Linux":
+      promt = r'/[sudo]/ password %s:' % os.environ["USER"]
+   elif osname = "Darwin":
+      promt = 'Password: '
+   else
+      assert False,osname 
+   child = pexpect.spawn(cmdline)
+   idx = child.expect([promt, pexpect.EOF], 3)
+   if idx == 0:
+      log.debug("sudo password was asked")
+      child.sendline(password)
+      child.expect(pexpect.EOF)
+    return child.bufore
+       
 
 def main(args):
     return 0
