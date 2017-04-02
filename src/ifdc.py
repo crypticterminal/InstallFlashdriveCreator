@@ -25,26 +25,31 @@
 import platform, os, logging
 import subprocess,pexpect
 
-log = logging.log(__name__)
+#log = logging.log(__name__)
 
 def sudo_exec(cmdline,password):
    osname = platform.system()
    if osname == "Linux":
       promt = r'/[sudo]/ password %s:' % os.environ["USER"]
-   elif osname = "Darwin":
+   elif osname == "Darwin":
       promt = 'Password: '
-   else
+   else:
       assert False,osname 
    child = pexpect.spawn(cmdline)
    idx = child.expect([promt, pexpect.EOF], 3)
    if idx == 0:
-      log.debug("sudo password was asked")
+ #     log.debug("sudo password was asked")
       child.sendline(password)
       child.expect(pexpect.EOF)
-    return child.bufore
+
+   return child.before
        
 
 def main(args):
+    print("+-----------------------------------------------------------+")
+    print("|          sudo exec test                                   |")
+    print("+-----------------------------------------------------------+")
+    print(sudo_exec("lsusb",""))
     return 0
 
 if __name__ == '__main__':
